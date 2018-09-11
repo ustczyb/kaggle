@@ -85,7 +85,7 @@ def load_data_and_preprocessing():
     scaler = preprocessing.StandardScaler()
     df_test['Age_scaled'] = scaler.fit_transform(df_test[['Age']], age_scale_param)
     df_test['Fare_scaled'] = scaler.fit_transform(df_test[['Fare']], fare_scale_param)
-    test_np = df_test.filter(regex='Age_.*|SibSp|Parch|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*')
+    test_np = df_test.filter(regex='Age_.*|SibSp|Parch|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*').values
     return train_np, test_np
 
 
