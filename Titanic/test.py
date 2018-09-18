@@ -1,16 +1,15 @@
 import warnings
 
-from sklearn.metrics import accuracy_score
-import pandas as pd
 import numpy as np
-from Titanic.preprocess import load_data_and_preprocessing
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
+import pandas as pd
 from sklearn import cross_validation
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import StratifiedKFold
-import xgboost as xgb
 from xgboost import XGBClassifier
+
+from Titanic.preprocess import load_data_and_preprocessing
 
 
 def load_data():
@@ -34,9 +33,9 @@ def logistic_predict(logistic_clf, test_np):
 
 def xgboost_model(train_X, train_y):
     xgb_clf = XGBClassifier(n_jobs=-1)
-    param_grid = {# 'learning_rate': [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3],
-                  # 'n_estimators':[50, 100, 150, 200],
-                  'max_depth': [2, 3, 4, 5, 6, 7]}
+    param_grid = { 'learning_rate': [0.2],
+        # 'n_estimators':[50, 100, 150, 200],
+        'max_depth': [3]}
     kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=7)
     grid_search = GridSearchCV(xgb_clf, param_grid, n_jobs=-1, cv=kfold)
     grid_search.fit(train_X, train_y)
@@ -54,6 +53,17 @@ def xgboost_predict(xgb_clf, test_np):
     return y_predict
 
 
+def random_forest(train_X, train_y):
+    rf_clf = RandomForestClassifier(n_jobs=-1, oob_score=True)
+    rf_clf.fit(train_X, train_y)
+    print("random forest oob score:", rf_clf.oob_score_)
+    return rf_clf
+
+
+def rf_predict(rf, test_np):
+    return rf.predict(test_np)
+
+
 def generate_csv_res(test_np, predict):
     test_data = pd.read_csv('data/test.csv')
     pd_result = pd.DataFrame(
@@ -65,13 +75,18 @@ if __name__ == '__main__':
     warnings.filterwarnings(module='sklearn*', action='ignore', category=DeprecationWarning)
     train_X, train_y, test_np = load_data()
 
-    # 使用logistic regression
+    # 使用logistic regression 0.75
     # logistic_clf = logistic_model(train_X, train_y)
     # y_predict = logistic_predict(logistic_clf, test_np)
-    # generate_csv_res(test_np, y_predict)
 
-    # 使用xgboost
+    # 使用xgboost 0.74
     xgb_clf = xgboost_model(train_X, train_y)
     y_predict = xgboost_predict(xgb_clf, test_np)
-    generate_csv_res(test_np, y_predict)
     # 使用svm
+
+    # 使用随机森林 0.74
+    # rf_clf = random_forest(train_X, train_y)
+    # y_predict = rf_predict(rf_clf, test_np)
+
+
+    generate_csv_res(test_np, y_predict)

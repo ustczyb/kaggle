@@ -41,6 +41,18 @@ def handle_catagory(origin_df):
     return df
 
 
+# 处理家庭信息
+def handle_family(df):
+    df['fmlNum'] = df['SibSp'] + df['Parch'] + 1
+    df['isAlone'] = df['fmlNum'].apply(lambda x: 1 if x == 0 else 0)
+    return df
+
+
+# 提取姓名信息
+def handle_name(df):
+    pass
+
+
 # 数据归一化
 def scaling(df):
     scaler = preprocessing.StandardScaler()
@@ -49,6 +61,10 @@ def scaling(df):
     fare_scale_param = scaler.fit(df[['Fare']])
     df['Fare_scaled'] = scaler.fit_transform(df[['Fare']])
     return age_scale_param, fare_scale_param
+
+
+def select_columns(df):
+    return df.filter(regex='Survived|Age_.*|SibSp|Parch|fmlNum|isAlone|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*')
 
 
 def load_data_and_preprocessing():
@@ -60,9 +76,9 @@ def load_data_and_preprocessing():
     train_data, rfr = handle_age(train_data)
     train_data = handle_cabin(train_data)
     train_data = handle_catagory(train_data)
+    train_data = handle_family(train_data)
     age_scale_param, fare_scale_param = scaling(train_data)
-    train_df = train_data.filter(regex='Survived|Age_.*|SibSp|Parch|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*')
-    train_np = train_df.values
+    train_df = select_columns(train_data)
     # 测试数据集处理
     test_data = pd.read_csv('data/test.csv')
     test_data.loc[(test_data.Fare.isnull()), 'Fare'] = 0
@@ -74,19 +90,22 @@ def load_data_and_preprocessing():
     X = null_age[:, 1:]
     predictedAges = rfr.predict(X)
     test_data.loc[(test_data.Age.isnull()), 'Age'] = predictedAges
-    data_test = handle_cabin(test_data)
-    dummies_Cabin = pd.get_dummies(data_test['Cabin'], prefix='Cabin')
-    dummies_Embarked = pd.get_dummies(data_test['Embarked'], prefix='Embarked')
-    dummies_Sex = pd.get_dummies(data_test['Sex'], prefix='Sex')
-    dummies_Pclass = pd.get_dummies(data_test['Pclass'], prefix='Pclass')
-
-    df_test = pd.concat([data_test, dummies_Cabin, dummies_Embarked, dummies_Sex, dummies_Pclass], axis=1)
-    df_test.drop(['Pclass', 'Name', 'Sex', 'Ticket', 'Cabin', 'Embarked'], axis=1, inplace=True)
+    df_test = handle_cabin(test_data)
+    df_test = handle_catagory(df_test)
+    df_test = handle_family(df_test)
     scaler = preprocessing.StandardScaler()
     df_test['Age_scaled'] = scaler.fit_transform(df_test[['Age']], age_scale_param)
     df_test['Fare_scaled'] = scaler.fit_transform(df_test[['Fare']], fare_scale_param)
-    test_np = df_test.filter(regex='Age_.*|SibSp|Parch|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*').values
-    return train_np, test_np
+    test_np = select_columns(df_test).values
+    return train_df, test_np
+
+
+def load_data_train():
+    train_df, test_np = load_data_and_preprocessing()
+    train_np = train_df.values
+    train_y = train_np[:, 0]
+    train_X = train_df[:, 1:]
+    return train_X, train_y
 
 
 if __name__ == '__main__':
