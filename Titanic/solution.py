@@ -21,7 +21,10 @@ def generate_feature_importance(train_df, feature_importance, clf_name):
 
 if __name__ == '__main__':
     # 1.训练和测试数据预处理
-    train_df, test_np = load_data_and_preprocessing()
+    train_df = pd.read_csv('data/train_processed.csv')
+    test_df = pd.read_csv('data/test_processed.csv')
+    test_np = test_df.values
+    # train_df, test_np = load_data_and_preprocessing()
     train_np = train_df.values
     train_y = train_np[:, 0]
     train_X = train_df.iloc[:, 1:]
@@ -29,22 +32,25 @@ if __name__ == '__main__':
     # 2.各模型训练
 
     # 2.1 logistic regression
-    logistic_clf = LogisticClf(train_X, train_y)
-    logistic_clf.train()
-    lr_feature_importance = generate_feature_importance(train_X, logistic_clf.feature_importance(), "lr")
-    # lr_predict = logistic_clf.predict(test_np)
-    # generate_csv_res(lr_predict, "lr")
+    if True:
+        logistic_clf = LogisticClf(train_X, train_y)
+        logistic_clf.train()
+        lr_feature_importance = generate_feature_importance(train_X, logistic_clf.feature_importance(), "lr")
+        lr_predict = logistic_clf.predict(test_np)
+        generate_csv_res(lr_predict, "lr")
 
     # 2.2 xgboost
-    xgb_clf = XgbClf(train_X, train_y)
-    xgb_clf.train()
-    xgb_feature_importance = generate_feature_importance(train_X, xgb_clf.feature_importance(), "xgb")
-    # xgb_predict = xgb_clf.predict(test_np)
-    # generate_csv_res(xgb_predict, "xgb")
+    if False:
+        xgb_clf = XgbClf(train_X, train_y)
+        xgb_clf.train()
+        xgb_feature_importance = generate_feature_importance(train_X, xgb_clf.feature_importance(), "xgb")
+        xgb_predict = xgb_clf.predict(test_np)
+        generate_csv_res(xgb_predict, "xgb")
 
     # 2.3 random forest
-    rf_clf = RandomForestClf(train_X, train_y)
-    rf_clf.train()
-    rf_feature_importance = generate_feature_importance(train_X, rf_clf.feature_importance(), "rf")
-    # rf_predict = rf_clf.predict(test_np)
-    # generate_csv_res(rf_predict, "rf")
+    if False:
+        rf_clf = RandomForestClf(train_X, train_y)
+        rf_clf.train()
+        rf_feature_importance = generate_feature_importance(train_X, rf_clf.feature_importance(), "rf")
+        rf_predict = rf_clf.predict(test_np)
+        generate_csv_res(rf_predict, "rf")
