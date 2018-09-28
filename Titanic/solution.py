@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
+
 from Titanic.model.lr import LogisticClf
 from Titanic.model.random_forest import RandomForestClf
 from Titanic.model.xgboost import XgbClf
-from Titanic.preprocess import load_data_train, load_data_and_preprocessing
 
 
 def generate_csv_res(predict, clf_name):

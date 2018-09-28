@@ -41,6 +41,7 @@ def handle_catagory(origin_df):
     df = handle_one_catagory(df, 'Sex')
     df = handle_one_catagory(df, 'Pclass')
     df = handle_one_catagory(df, 'Title')
+    df = handle_one_catagory(df, 'SexAndClass')
     return df
 
 
@@ -82,15 +83,30 @@ def age_fare_scaling(df, age_scale_param=None, fare_scale_param=None):
     df['Fare_scaled'] = scaler.fit_transform(df[['Fare']])
     return df, age_scale_param, fare_scale_param
 
+# 特征离散化
+def feature_scatter(df):
+    # TODO
+    pass
+
 # 特征交叉
 def feature_crossing(df):
     # mother:女性+Parch
-    df['Mother'] = (df['Sex_female'] == 1) & (df['Parch'] > 1)
+    # df['Mother'] = ((df['Sex_female'] == 1) & (df['Parch'] > 1)).astype(int)
+    # sex+pclass 特征交叉
+    df['SexAndClass'] = df['Sex']
+    df.loc[(df["Sex"] == 'male') & (df['Pclass'] == 1), "SexAndClass"] = 0
+    df.loc[(df["Sex"] == 'female') & (df['Pclass'] == 1), "SexAndClass"] = 1
+
+    df.loc[(df["Sex"] == 'male') & (df['Pclass'] == 2), "SexAndClass"] = 2
+    df.loc[(df["Sex"] == 'female') & (df['Pclass'] == 2), "SexAndClass"] = 3
+
+    df.loc[(df["Sex"] == 'male') & (df['Pclass'] == 3), "SexAndClass"] = 4
+    df.loc[(df["Sex"] == 'female') & (df['Pclass'] == 3), "SexAndClass"] = 5
     return df
 
 
 def select_columns(df):
-    return df.filter(regex='Survived|Age_.*|SibSp|Parch|fmlNum|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*|Title_.*|Mother')
+    return df.filter(regex='Survived|Age_.*|SibSp|Parch|fmlNum|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*|Title_.*|SexAndClass_.*')
 
 
 def load_data_and_preprocessing():
@@ -103,9 +119,9 @@ def load_data_and_preprocessing():
     train_data = handle_cabin(train_data)
     train_data = handle_name(train_data)
     train_data, age_regressor = handle_age(train_data, None)
+    train_data = feature_crossing(train_data)
     train_data = handle_catagory(train_data)
     train_data = handle_family(train_data)
-    train_data = feature_crossing(train_data)
     # 数据标准化
     train_data, age_scale_param, fare_scale_param = age_fare_scaling(train_data)
     train_df = select_columns(train_data)
@@ -117,9 +133,9 @@ def load_data_and_preprocessing():
     test_data = handle_cabin(test_data)
     test_data = handle_name(test_data)
     test_data = handle_age(test_data, age_regressor)[0]
+    test_data = feature_crossing(test_data)
     test_data = handle_catagory(test_data)
     test_data = handle_family(test_data)
-    test_data = feature_crossing(test_data)
     test_data = age_fare_scaling(test_data, age_scale_param, fare_scale_param)[0]
     test_df = select_columns(test_data)
     test_df.to_csv("data/test_processed.csv", index=False)
