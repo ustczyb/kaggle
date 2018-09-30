@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+from Titanic.model.gbdt import GradientBoostingClf
 from Titanic.model.lr import LogisticClf
 from Titanic.model.random_forest import RandomForestClf
 from Titanic.model.xgboost import XgbClf
@@ -19,6 +20,10 @@ def generate_feature_importance(train_df, feature_importance, clf_name):
     return feature_dataframe
 
 
+def ensumble(train_X, train_y):
+    pass
+
+
 if __name__ == '__main__':
     # 1.训练和测试数据预处理
     train_df = pd.read_csv('data/train_processed.csv')
@@ -32,7 +37,7 @@ if __name__ == '__main__':
     # 2.各模型训练
 
     # 2.1 logistic regression
-    if True:
+    if False:
         logistic_clf = LogisticClf(train_X, train_y)
         logistic_clf.train()
         lr_feature_importance = generate_feature_importance(train_X, logistic_clf.feature_importance(), "lr")
@@ -54,3 +59,11 @@ if __name__ == '__main__':
         rf_feature_importance = generate_feature_importance(train_X, rf_clf.feature_importance(), "rf")
         rf_predict = rf_clf.predict(test_np)
         generate_csv_res(rf_predict, "rf")
+
+    # 2.4 gbdt
+    if True:
+        gbdt_clf = GradientBoostingClf(train_X, train_y)
+        gbdt_clf.train()
+        gbdt_feature_importance = generate_feature_importance(train_X, gbdt_clf.feature_importance(), "gbdt")
+        gbdt_predict = gbdt_clf.predict(test_np)
+        generate_csv_res(gbdt_predict, "gbdt")

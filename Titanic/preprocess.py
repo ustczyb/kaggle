@@ -106,7 +106,7 @@ def feature_crossing(df):
 
 
 def select_columns(df):
-    return df.filter(regex='Survived|Age_.*|SibSp|Parch|fmlNum|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*|Title_.*|SexAndClass_.*')
+    return df.filter(regex='Survived|Age_.*|SibSp|Parch|fmlNum|Fare_.*|Cabin_.*|Embarked_.*|Title_.*|SexAndClass_.*')
 
 
 def load_data_and_preprocessing():

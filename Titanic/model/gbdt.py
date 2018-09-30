@@ -1,9 +1,9 @@
-from sklearn.svm import SVC
+from sklearn.ensemble import GradientBoostingClassifier
 
 from Titanic.model.interface import BaseModel
 
 
-class SVMClf(BaseModel):
+class GradientBoostingClf(BaseModel):
 
     def __init__(self, train_df, train_label):
         """
@@ -16,7 +16,7 @@ class SVMClf(BaseModel):
         self.model = None
 
     def train(self):
-        self.model = SVC().fit(self.train_X, self.train_y)
+        self.model = GradientBoostingClassifier().fit(self.train_X, self.train_y)
 
     def predict(self, predict_X):
         return self.model.predict(predict_X)
@@ -25,4 +25,4 @@ class SVMClf(BaseModel):
         pass
 
     def feature_importance(self):
-        pass
+        return self.model.feature_importances_
