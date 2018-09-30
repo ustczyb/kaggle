@@ -21,10 +21,6 @@ def generate_feature_importance(train_df, feature_importance, clf_name):
     return feature_dataframe
 
 
-def ensumble(train_X, train_y):
-    pass
-
-
 if __name__ == '__main__':
     # 1.训练和测试数据预处理
     train_df = pd.read_csv('data/train_processed.csv')
