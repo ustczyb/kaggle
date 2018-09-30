@@ -53,7 +53,7 @@ if __name__ == '__main__':
         generate_csv_res(xgb_predict, "xgb")
 
     # 2.3 random forest
-    if False:
+    if True:
         rf_clf = RandomForestClf(train_X, train_y)
         rf_clf.train()
         rf_feature_importance = generate_feature_importance(train_X, rf_clf.feature_importance(), "rf")
@@ -61,7 +61,7 @@ if __name__ == '__main__':
         generate_csv_res(rf_predict, "rf")
 
     # 2.4 gbdt
-    if True:
+    if False:
         gbdt_clf = GradientBoostingClf(train_X, train_y)
         gbdt_clf.train()
         gbdt_feature_importance = generate_feature_importance(train_X, gbdt_clf.feature_importance(), "gbdt")
