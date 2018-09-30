@@ -4,6 +4,7 @@ import pandas as pd
 from Titanic.model.gbdt import GradientBoostingClf
 from Titanic.model.lr import LogisticClf
 from Titanic.model.random_forest import RandomForestClf
+from Titanic.model.svm import SVMClf
 from Titanic.model.xgboost import XgbClf
 
 
@@ -53,7 +54,7 @@ if __name__ == '__main__':
         generate_csv_res(xgb_predict, "xgb")
 
     # 2.3 random forest
-    if True:
+    if False:
         rf_clf = RandomForestClf(train_X, train_y)
         rf_clf.train()
         rf_feature_importance = generate_feature_importance(train_X, rf_clf.feature_importance(), "rf")
@@ -67,3 +68,10 @@ if __name__ == '__main__':
         gbdt_feature_importance = generate_feature_importance(train_X, gbdt_clf.feature_importance(), "gbdt")
         gbdt_predict = gbdt_clf.predict(test_np)
         generate_csv_res(gbdt_predict, "gbdt")
+
+    # 2.5 svm
+    if True:
+        svm_clf = SVMClf(train_X, train_y)
+        svm_clf.train()
+        svm_predict = svm_clf.predict(test_np)
+        generate_csv_res(svm_predict, "svm")
