@@ -48,13 +48,13 @@ def stacking_train():
 
     # 3.构建第二层的训练数据
     lr_oof_train, lr_oof_test = get_oof(lr_clf, train_X, train_y, test_np)
-    xgb_oof_train, xgb_oof_test = get_oof(xgb_clf, train_X, train_y, test_np)
+    # xgb_oof_train, xgb_oof_test = get_oof(xgb_clf, train_X, train_y, test_np)
     rf_oof_train, rf_oof_test = get_oof(rf_clf, train_X, train_y, test_np)
     gbdt_oof_train, gbdt_oof_test = get_oof(gbdt_clf, train_X, train_y, test_np)
     svm_oof_train, svm_oof_test = get_oof(svm_clf, train_X, train_y, test_np)
     base_predictions_train = pd.DataFrame({'RandomForest': rf_oof_train.ravel(),
                                            'LogisticRegression': lr_oof_train.ravel(),
-                                           'XGBoost': xgb_oof_train.ravel(),
+                                           # 'XGBoost': xgb_oof_train.ravel(),
                                            'GradientBoost': gbdt_oof_train.ravel(),
                                            'SVM': svm_oof_train.ravel(),
                                            'Survival': train_y
@@ -62,13 +62,13 @@ def stacking_train():
     base_predictions_train.to_csv('stacking_train.csv', index=False)
     base_predictions_test = pd.DataFrame({'RandomForest': rf_oof_test.ravel(),
                                            'LogisticRegression': lr_oof_test.ravel(),
-                                           'XGBoost': xgb_oof_test.ravel(),
+                                           # 'XGBoost': xgb_oof_test.ravel(),
                                            'GradientBoost': gbdt_oof_test.ravel(),
                                            'SVM': svm_oof_test.ravel(),
                                            })
     base_predictions_test.to_csv('stacking_test.csv', index=False)
-    x_train = np.concatenate((rf_oof_train, lr_oof_train, xgb_oof_train, gbdt_oof_train, svm_oof_train), axis=1)
-    x_test = np.concatenate((rf_oof_test, lr_oof_test, xgb_oof_test, gbdt_oof_test, svm_oof_test), axis=1)
+    x_train = np.concatenate((rf_oof_train, lr_oof_train, svm_oof_train), axis=1)
+    x_test = np.concatenate((rf_oof_test, lr_oof_test, svm_oof_test), axis=1)
     return x_train, train_y, x_test
 
 
