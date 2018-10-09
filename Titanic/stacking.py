@@ -74,19 +74,9 @@ def stacking_train():
 
 if __name__ == '__main__':
     X_train, y_train, X_test = stacking_train()
-    gbm = xgb.XGBClassifier(
-        # learning_rate = 0.02,
-        n_estimators=2000,
-        max_depth=4,
-        min_child_weight=2,
-        # gamma=1,
-        gamma=0.9,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        objective='binary:logistic',
-        nthread=-1,
-        scale_pos_weight=1).fit(X_train, y_train)
-    predict = gbm.predict(X_test)
+    lr_clf = LogisticRegressionCV()
+    lr_clf.fit(X_train, y_train)
+    predict = lr_clf.predict(X_test)
     test_data = pd.read_csv('data/test.csv')
     pd_result = pd.DataFrame(
         {'PassengerId': test_data['PassengerId'].values, 'Survived': predict.astype(np.int32)})
