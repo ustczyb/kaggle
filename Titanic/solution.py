@@ -23,13 +23,13 @@ def generate_feature_importance(train_df, feature_importance, clf_name):
 
 if __name__ == '__main__':
     # 1.训练和测试数据预处理
-    train_df = pd.read_csv('data/train_processed.csv')
-    test_df = pd.read_csv('data/test_processed.csv')
+    train_df = pd.read_csv('data/linear_train.csv')
+    test_df = pd.read_csv('data/linear_test.csv')
     test_np = test_df.values
     # train_df, test_np = load_data_and_preprocessing()
-    train_np = train_df.values
-    train_y = train_np[:, 0]
-    train_X = train_df.iloc[:, 1:]
+    train_y = train_df['Survived'].values
+    train_df.drop(['Survived'], axis=1, inplace=True)
+    train_X = train_df
 
     # 2.各模型训练
 
@@ -42,31 +42,31 @@ if __name__ == '__main__':
         generate_csv_res(lr_predict, "lr")
 
     # 2.2 xgboost
-    if False:
+    if True:
         xgb_clf = XgbClf(train_X, train_y)
         xgb_clf.train()
-        xgb_feature_importance = generate_feature_importance(train_X, xgb_clf.feature_importance(), "xgb")
+        # xgb_feature_importance = generate_feature_importance(train_X, xgb_clf.feature_importance(), "xgb")
         xgb_predict = xgb_clf.predict(test_np)
         generate_csv_res(xgb_predict, "xgb")
 
     # 2.3 random forest
-    if False:
+    if True:
         rf_clf = RandomForestClf(train_X, train_y)
         rf_clf.train()
-        rf_feature_importance = generate_feature_importance(train_X, rf_clf.feature_importance(), "rf")
+        # rf_feature_importance = generate_feature_importance(train_X, rf_clf.feature_importance(), "rf")
         rf_predict = rf_clf.predict(test_np)
         generate_csv_res(rf_predict, "rf")
 
     # 2.4 gbdt
-    if False:
+    if True:
         gbdt_clf = GradientBoostingClf(train_X, train_y)
         gbdt_clf.train()
-        gbdt_feature_importance = generate_feature_importance(train_X, gbdt_clf.feature_importance(), "gbdt")
+        # gbdt_feature_importance = generate_feature_importance(train_X, gbdt_clf.feature_importance(), "gbdt")
         gbdt_predict = gbdt_clf.predict(test_np)
         generate_csv_res(gbdt_predict, "gbdt")
 
     # 2.5 svm
-    if True:
+    if False:
         svm_clf = SVMClf(train_X, train_y)
         svm_clf.train()
         svm_predict = svm_clf.predict(test_np)

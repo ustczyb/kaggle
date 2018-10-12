@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from xgboost import XGBClassifier
 
 from Titanic.model.interface import BaseModel
@@ -29,8 +30,7 @@ class XgbClf(BaseModel):
         # kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=7)
         # grid_search = GridSearchCV(xgb_clf, param_grid, n_jobs=-1, cv=kfold)
         # grid_search.fit(self.train_X, self.train_y)
-        self.model = xgb_clf
-        # print("xgboost score:", xgb_clf.best_score_)
+        # self.model = grid_search
 
     def predict(self, predict_X):
         """

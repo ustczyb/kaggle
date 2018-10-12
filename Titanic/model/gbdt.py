@@ -17,7 +17,7 @@ class GradientBoostingClf(BaseModel):
         self.model = None
 
     def train(self):
-        gbdt_clf = GradientBoostingClassifier(max_depth=3)
+        gbdt_clf = GradientBoostingClassifier(learning_rate=0.3,max_depth=4)
         self.model = gbdt_clf.fit(self.train_X, self.train_y)
         # param_grid = {'n_estimators': [100, 200, 300, 500],
         #               'learning_rate': [0.1, 0.2, 0.3],

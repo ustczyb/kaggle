@@ -8,8 +8,8 @@ def gather_results():
         'PassengerId': pd.read_csv('predict_rf.csv').values[:, 0],
         'RandomForest': pd.read_csv('predict_rf.csv').values[:, 1],
         'LogisticRegression': pd.read_csv('predict_lr.csv').values[:, 1],
-        # 'GBDT': pd.read_csv('predict_gbdt.csv').values[:, 1],
-        # 'Xgboost': pd.read_csv('predict_xgb.csv').values[:, 1],
+        'GBDT': pd.read_csv('predict_gbdt.csv').values[:, 1],
+        'Xgboost': pd.read_csv('predict_xgb.csv').values[:, 1],
         'SVM': pd.read_csv('predict_svm.csv').values[:, 1]
     })
     gather_result.to_csv('gather_predict.csv', index=False)
@@ -22,7 +22,7 @@ def vote():
     :param train_y:
     :return:
     """
-    # gather_results()
+    gather_results()
     gather_df = pd.read_csv('gather_predict.csv')
     vote_res_df = pd.DataFrame()
     vote_res_df['PassengerId'] = gather_df['PassengerId']

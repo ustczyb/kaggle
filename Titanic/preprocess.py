@@ -83,7 +83,7 @@ def age_fare_scaling(df, age_scale_param=None, fare_scale_param=None):
     df['Fare_scaled'] = scaler.fit_transform(df[['Fare']])
     return df, age_scale_param, fare_scale_param
 
-# 特征离散化
+# 特征离散化 年龄
 def feature_scatter(df):
     # TODO
     pass
@@ -91,7 +91,7 @@ def feature_scatter(df):
 # 特征交叉
 def feature_crossing(df):
     # mother:女性+Parch
-    # df['Mother'] = ((df['Sex_female'] == 1) & (df['Parch'] > 1)).astype(int)
+    df['Mother'] = ((df['Sex_female'] == 1) & (df['Parch'] > 1)).astype(int)
     # sex+pclass 特征交叉
     df['SexAndClass'] = df['Sex']
     df.loc[(df["Sex"] == 'male') & (df['Pclass'] == 1), "SexAndClass"] = 0
